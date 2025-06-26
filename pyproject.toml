@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "github-action-tools"
+# description = "TODO"
+keywords = ["github", "actions", "ci", "tool"]
+
+version = "0.0.1"
+# TODO look into setuptools version handling
+# dynamic = ["version"]
+
+authors = [
+  {name = "belse-de"},
+]
+maintainers = [
+  {name = "belse-de"}
+]
+
+readme = "README.md"
+license="BSD-3-Clause"
+
+dependencies = [
+  "schemamodels~=0.9.1",
+]
+requires-python = ">=3.11"
+
+[project.optional-dependencies]
+#gui = ["PyQt5"]
+#cli = [
+#  "rich",
+#  "click",
+#]
+
+#[project.scripts]
+#spam-cli = "spam:main_cli"
+
+#[project.gui-scripts]
+#spam-gui = "spam:main_gui"
+
+#[project.entry-points."spam.magical"]
+#tomatoes = "spam:main_tomatoes"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"
+testpaths = [
+    "tests",
+    "integration",
+]
