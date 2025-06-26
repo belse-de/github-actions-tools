@@ -97,10 +97,10 @@ class Architecture(Enum):
 
 
 class Configuration(
-    RootModel[Union[str, float, bool, Dict[str, Configuration], List[Configuration]]]
+    RootModel[Union[str, float, bool, Dict[str, "Configuration"], List["Configuration"]]]
 ):
-    root: Union[str, float, bool, Dict[str, Configuration], List[Configuration]]
-
+    root: Union[str, float, bool, Dict[str, "Configuration"], List["Configuration"]]
+# TODO: write BUG report for the need of forward declaration
 
 class Credentials(BaseModel):
     username: Optional[str] = None
