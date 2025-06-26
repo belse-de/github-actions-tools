@@ -1,0 +1,24 @@
+name: 'Package and Publish'
+description: 'Publish actions as OCI artifacts to GHCR'
+
+# TODO: Add your action's branding here. This will appear on the GitHub Marketplace.
+branding:
+  icon: 'heart'
+  color: 'red'
+
+inputs:
+  github-token:
+    description: 'The GitHub actions token used to authenticate with GitHub APIs'
+    default: ${{ github.token }}
+
+outputs:
+  package-manifest-sha:
+    description: 'A sha256 hash of the package manifest'
+  attestation-manifest-sha:
+    description: 'The sha256 of the provenance attestation uploaded to GHCR. This is not present if the package is not attested, e.g. in enterprise environments.'
+  referrer-index-manifest-sha:
+    description: 'The sha256 of the referrer index uploaded to GHCR. This is not present if the package is not attested, e.g. in enterprise environments.'
+
+runs:
+  using: node20
+  main: dist/index.js
