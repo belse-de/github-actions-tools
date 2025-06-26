@@ -1,9 +1,17 @@
 #!/usr/bin/env python
 
 import json
+import os.path
+import glob
+import unittest
+
+import pytest
+import yaml
 
 from models.github.action import Action
 from  models.github.workflow import Workflow
+
+from pydantic import ValidationError
 
 # This is a sample Python script.
 
@@ -33,34 +41,36 @@ def scrub(obj: dict, bad_key: str):
         pass
 
 
-# Press the green button in the gutter to run the script.
+# Press the green button in the gutter to run the script.l
 if __name__ == '__main__':
     print_hi('PyCharm')
 
-    factory = sm.SchemaModelFactory()
 
-    gh_action_schema_path = "schemas/github-action.json"
-    gh_action_schema_file = open(gh_action_schema_path, "rt")
-    gh_action_schema = json.load(gh_action_schema_file)
-    gh_action_schema_file.close()
-    gh_action_schema["title"] = "GithubAction"
-    scrub(gh_action_schema, "$comment")
-    #print(factory.register(gh_action_schema))
+def load_workflow(path: str) -> dict[str, any] | None:
+    yaml_dict = None
+    with open(path, "rt") as file:
+        yaml_dict = yaml.safe_load(file)
+        if True in yaml_dict:
+            yaml_dict["on"] = yaml_dict.pop(True)
+    return yaml_dict
 
-    gh_workflow_schema_path = "schemas/github-workflow.json"
-    gh_workflow_schema_file = open(gh_workflow_schema_path, "rt")
-    gh_workflow_schema = json.load(gh_workflow_schema_file)
-    gh_workflow_schema_file.close()
-    gh_workflow_schema["title"] = "GithubWorkflow"
-    scrub(gh_workflow_schema, "$comment")
-    scrub(gh_workflow_schema, "$ref")
-    print(factory.register(gh_workflow_schema))
+test_actions_dir = "test/data/actions"
+@pytest.mark.parametrize("action_path", glob.glob(os.path.join(test_actions_dir, "**", "action.y*ml")))
+def test_actions(action_path: str):
+    assert(action_path.endswith((".yml", ".yaml")))
 
-    Act = Action()
-    wf = Workflow()
-    print(wf)
-    print(Act)
+    action_yaml = load_workflow(action_path)
+    action = Action(**action_yaml)
+    assert action is not None
 
+test_workflows_dir = "test/data/workflows"
+@pytest.mark.parametrize("workflow_path", glob.glob(os.path.join(test_workflows_dir, "**", "*.y*ml"),recursive=True))
+def test_workflows(workflow_path):
+    assert (workflow_path.endswith((".yml", ".yaml")))
+
+    workflow_yaml = load_workflow(workflow_path)
+    workflow = Workflow(**workflow_yaml)
+    assert workflow is not None
 
 
 
