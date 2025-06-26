@@ -19,12 +19,10 @@ inputs:
     default: 'all'
   snapshot-sha:
     description: The SHA that the results will be linked to in the dependency snapshot
-    type: string
     required: false
     default: ''
   snapshot-ref:
     description: The ref that the results will be linked to in the dependency snapshot
-    type: string
     required: false
     default: ''
 
@@ -32,17 +30,14 @@ inputs:
   # Defaults will be used if none are not provided.  If only one or two are provided, the action will fail.
   detector-name:
     description: The name of the detector that generated the dependency snapshot
-    type: string
     required: false
     default: ''
   detector-version:
     description: The version of the detector that generated the dependency snapshot
-    type: string
     required: false
     default: ''
   detector-url:
     description: The URL to the detector that generated the dependency snapshot
-    type: string
     required: false
     default: ''
 runs:
