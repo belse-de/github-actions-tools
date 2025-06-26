@@ -1,0 +1,13 @@
+name: Get Go versions
+on:
+  schedule:
+    - cron: '0 3,15 * * *'
+  workflow_dispatch:
+
+jobs:
+  get-new-go-versions:
+    uses: actions/versions-package-tools/.github/workflows/get-new-tool-versions.yml@main
+    with:
+      tool-name: "Go"
+      image-url: "https://go.dev/images/gopher-footer.jpg"
+    secrets: inherit

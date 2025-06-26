@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  workflow_dispatch:
+    inputs:
+      releaseVersion:
+        description: 'The next release version to use in the format of v1.x.x'
+        required: true
+  push:
+    branches:
+      - main
+  pull_request: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure global git auth
+        run: git config --global http.https://github.com/.extraheader "$(git config --local http.https://github.com/.extraheader)"
+
+      - name: Build
+        run: ./script/build.sh
+
+      - name: Verify no unstaged changes
+        run: ./script/verify-no-unstaged-changes.sh
+
+      - name: Test tarball
+        run: ./script/test.sh ./_layout/action-versions.tar.gz
+      
+      - name: Test zipball
+        run: ./script/test.sh ./_layout/action-versions.zip
+
+      - name: Release
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          gh release create ${{github.event.inputs.releaseVersion}} --generate-notes ./_layout/action-versions.zip ./_layout/action-versions.tar.gz
+        env:
+          GH_TOKEN: ${{ github.token }}

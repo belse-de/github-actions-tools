@@ -1,0 +1,67 @@
+name: Record Expected
+
+on:
+  workflow_dispatch:
+
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: ghcr.io
+  # github.repository as <account>/<repo>
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  resolve-image-tag:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.regex-match.outputs.group1 }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Grep action.yaml content
+        id: grep-image-content
+        run: |
+          image=$(grep -E "jekyll-build-pages.*\'" action.yml)
+          echo "image=$image" >> $GITHUB_OUTPUT
+      - uses: actions-ecosystem/action-regex-match@v2
+        id: regex-match
+        with:
+          text: ${{ steps.grep-image-content.outputs.image }}
+          regex: "jekyll-build-pages:(.*)'"
+
+  test-builds:
+    needs: resolve-image-tag
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        test:
+          - simple
+          - readme
+          - octicons
+          - mojombo
+          - themes
+          - jekyll-include-cache
+          - future-false
+          - future-true
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Build local docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          tags: ${{ needs.resolve-image-tag.outputs.tag }}
+
+      - name: Build ${{ matrix.test }} Project
+        uses: ./
+        with:
+          source: ./test_projects/${{ matrix.test }}
+          destination: ./test_projects/${{ matrix.test }}/_expected
+          build_revision: JEKYLL_BUILD_REVISION
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Archive ${{ matrix.test }} Project
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.test }}
+          path: ./test_projects/${{ matrix.test }}/_expected
