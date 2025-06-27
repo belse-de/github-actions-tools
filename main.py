@@ -19,6 +19,8 @@ from models.github.workflow import Workflow
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
+def has_yaml_suffix(path: str) -> bool:
+    return path.endswith((".yml", ".yaml"))
 
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
@@ -110,10 +112,8 @@ if __name__ == '__main__':
         repo_path = args.validate_repo
         assert os.path.isdir(repo_path)
 
-        action_paths = glob.glob(os.path.join(repo_path, ".github", "actions", "**", "action.y*ml"), recursive=True)
+        action_paths = filter(has_yaml_suffix, glob.glob(os.path.join(repo_path, ".github", "actions", "**", "action.y*ml"), recursive=True))
         for action_path in action_paths:
-            if not action_path.endswith((".yml", ".yaml")):
-                continue
             print(f"Validating action {action_path}", end="")
             action = load_action_log_only(action_path)
             if action is None:
@@ -121,10 +121,8 @@ if __name__ == '__main__':
             else:
                 print(" - ok")
 
-        workflow_paths = glob.glob(os.path.join(repo_path, ".github", "workflows", "**", "*.y*ml"), recursive=True)
+        workflow_paths = filter(has_yaml_suffix, glob.glob(os.path.join(repo_path, ".github", "workflows", "**", "*.y*ml"), recursive=True))
         for workflow_path in workflow_paths:
-            if not workflow_path.endswith((".yml", ".yaml")):
-                continue
             print(f"Validating workflow {workflow_path}", end="")
             workflow = load_workflow_log_only(workflow_path)
             if workflow is None:
@@ -133,17 +131,13 @@ if __name__ == '__main__':
                 print(" - ok")
 
 
-
-test_actions_dir = "test/data/actions"
-@pytest.mark.parametrize("action_path", glob.glob(os.path.join(test_actions_dir, "**", "action.y*ml")))
+@pytest.mark.parametrize("action_path", filter(has_yaml_suffix, glob.glob("test/data/actions/**/action.y*ml")))
 def test_actions(action_path: str):
-    assert action_path.endswith((".yml", ".yaml"))
     action = load_action(action_path)
     assert action is not None
 
-test_workflows_dir = "test/data/workflows"
-@pytest.mark.parametrize("workflow_path", glob.glob(os.path.join(test_workflows_dir, "**", "*.y*ml"),recursive=True))
-def test_workflows(workflow_path):
-    assert workflow_path.endswith((".yml", ".yaml"))
+
+@pytest.mark.parametrize("workflow_path", filter(has_yaml_suffix, glob.glob("test/data/workflows/*.y*ml")))
+def test_workflows(workflow_path: str):
     workflow = load_workflow(workflow_path)
     assert workflow is not None
