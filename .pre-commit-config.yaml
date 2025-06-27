@@ -1,0 +1,92 @@
+# Copyright (C) 2024 TomTom NV. All rights reserved.
+
+---
+
+exclude: >
+  (?x)^(
+      .*\.csv
+      | tests/.*\.kml
+      | tests/.*\.json
+      | mass_test/test/data/.*
+      | regression_test/tests/data/.*
+      | regression_test/dump_and_compare_instructions_test/input/.*
+      | regression_test/instruction_engine_regression_test_test/input/.*
+  )$
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      # git checks
+      - id: forbid-submodules
+      - id: check-merge-conflict
+      - id: check-added-large-files
+      # - id: no-commit-to-branch   # main, master
+      # file checks
+      - id: check-case-conflict
+      - id: check-symlinks
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      - id: end-of-file-fixer
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
+      - id: destroyed-symlinks
+      # file type specific checks
+      - id: check-yaml
+        args: [--allow-multiple-documents]
+      - id: check-toml
+      - id: check-json
+      - id: pretty-format-json
+        args: [--autofix, --no-sort-keys, --no-ensure-ascii]
+      - id: check-xml
+      # python specific checks
+      - id: check-ast
+      - id: debug-statements
+      - id: check-docstring-first
+
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.37.0
+    hooks:
+      - id: yamllint
+        name: check yaml files with yamllint
+        args: ["--strict"]
+
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.7
+    hooks:
+      - id: actionlint
+        name: check GitHub workflow files
+
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 0.33.0
+    hooks:
+      - id: check-github-actions
+      - id: check-github-workflows
+
+  - repo: https://github.com/asottile/add-trailing-comma
+    rev: v3.1.0
+    hooks: []
+    #  - id: add-trailing-comma
+
+  - repo: https://github.com/asottile/reorder-python-imports
+    rev: v3.14.0
+    hooks: []
+    #  - id: reorder-python-imports
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.19.1
+    hooks: []
+    #  - id: pyupgrade
+    #    args: [--py3-plus, --keep-percent-format]
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.15.0
+    hooks:
+      - id: mypy
+        # args: [--strict, --ignore-missing-imports]
+        args: [--ignore-missing-imports]
+        additional_dependencies:
+          - tokenize-rt==3.2.0
+          - types-six
+          - types-python-dateutil
