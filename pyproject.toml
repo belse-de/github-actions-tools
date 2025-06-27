@@ -22,9 +22,11 @@ readme = "README.md"
 license="BSD-3-Clause"
 
 dependencies = [
-  "schemamodels~=0.9.1",
+  "pydantic~=2.11.7",
+  "pytest~=8.4.1",
+  "PyYAML~=6.0.2"
 ]
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 
 [project.optional-dependencies]
 #gui = ["PyQt5"]
@@ -43,7 +45,7 @@ requires-python = ">=3.11"
 #tomatoes = "spam:main_tomatoes"
 
 [tool.pytest.ini_options]
-minversion = "6.0"
+minversion = "8.0"
 addopts = "-ra -q"
 testpaths = [
     "tests",
