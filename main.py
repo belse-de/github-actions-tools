@@ -100,28 +100,38 @@ if __name__ == '__main__':
     if args.validate_action:
         action_path = args.validate_action
         assert action_path.endswith((".yml", ".yaml"))
-        action = load_action(action_path)
+        action = load_action_log_only(action_path)
         assert action is not None
     elif args.validate_workflow:
         workflow_path = args.validate_workflow
         assert workflow_path.endswith((".yml", ".yaml"))
         workflow = load_workflow_log_only(workflow_path)
-        assert workflow is not None
     elif args.validate_repo:
         repo_path = args.validate_repo
         assert os.path.isdir(repo_path)
 
-        action_paths = glob.glob(os.path.join(repo_path, "**", "action.y*ml"), recursive=True)
+        action_paths = glob.glob(os.path.join(repo_path, ".github", "actions", "**", "action.y*ml"), recursive=True)
         for action_path in action_paths:
-            assert action_path.endswith((".yml", ".yaml"))
-            action = load_action(action_path)
-            assert action is not None
+            if not action_path.endswith((".yml", ".yaml")):
+                continue
+            print(f"Validating action {action_path}", end="")
+            action = load_action_log_only(action_path)
+            if action is None:
+                print(" - failed")
+            else:
+                print(" - ok")
 
-        workflow_paths = glob.glob(os.path.join(repo_path, "**", "*.y*ml"), recursive=True)
+        workflow_paths = glob.glob(os.path.join(repo_path, ".github", "workflows", "**", "*.y*ml"), recursive=True)
         for workflow_path in workflow_paths:
-            assert workflow_path.endswith((".yml", ".yaml"))
-            workflow = load_workflow(workflow_path)
-            assert workflow is not None
+            if not workflow_path.endswith((".yml", ".yaml")):
+                continue
+            print(f"Validating workflow {workflow_path}", end="")
+            workflow = load_workflow_log_only(workflow_path)
+            if workflow is None:
+                print(" - failed")
+            else:
+                print(" - ok")
+
 
 
 test_actions_dir = "test/data/actions"
