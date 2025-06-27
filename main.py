@@ -5,13 +5,14 @@ import os.path
 import glob
 import unittest
 
+import pydantic
+from pydantic import ValidationError
 import pytest
 import yaml
 
 from models.github.action import Action
-from  models.github.workflow import Workflow
+from  models.github.workflow_v1 import Workflow
 
-from pydantic import ValidationError
 
 # This is a sample Python script.
 
@@ -46,6 +47,12 @@ if __name__ == '__main__':
     print_hi('PyCharm')
 
 
+def load_action(path: str) -> dict[str, any] | None:
+    yaml_dict = None
+    with open(path, "rt") as file:
+        yaml_dict = yaml.load(file, yaml.BaseLoader)
+    return yaml_dict
+
 def load_workflow(path: str) -> dict[str, any] | None:
     yaml_dict = None
     with open(path, "rt") as file:
@@ -59,7 +66,7 @@ test_actions_dir = "test/data/actions"
 def test_actions(action_path: str):
     assert(action_path.endswith((".yml", ".yaml")))
 
-    action_yaml = load_workflow(action_path)
+    action_yaml = load_action(action_path)
     action = Action(**action_yaml)
     assert action is not None
 

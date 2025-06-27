@@ -10,3 +10,8 @@ datamodel-codegen --input schemas/github-workflow.json --output models/github/wo
 
 fetch test data:
  curl -s 'https://api.github.com/users/actions/repos?per_page=100' | jq -r '.[] | select( .name | test(".*")) | select(.fork == false).ssh_url' | xargs -L1 git clone
+
+
+
+# Known issues
+- parsing of on.schedule fails with load_action but not with load_workflow
