@@ -8,7 +8,7 @@ on:
       NodeVersion:
         required: true
         description: 'Node.js version to build (ex: v12.22.7, v16.12.0)'
-  workflow_call: 
+  workflow_call:
     inputs:
       NodeVersion:
         required: true
@@ -36,9 +36,9 @@ jobs:
           echo "Error: No NodeVersion specified"
           exit 1
         fi
-        
+
         # Set the output that will be used by subsequent steps/jobs
-        echo "NodeVersion=$NODE_VERSION" >> $GITHUB_OUTPUT   
+        echo "NodeVersion=$NODE_VERSION" >> $GITHUB_OUTPUT
 
   build:
     needs: [prebuild]

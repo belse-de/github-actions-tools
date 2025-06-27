@@ -1,8 +1,8 @@
 name: Publish test-ubuntu-git Container
 
 on:
-  # Use an on demand workflow trigger.  
-  # (Forked copies of actions/checkout won't have permission to update GHCR.io/actions, 
+  # Use an on demand workflow trigger.
+  # (Forked copies of actions/checkout won't have permission to update GHCR.io/actions,
   #  so avoid trigger events that run automatically.)
   workflow_dispatch:
     inputs:
@@ -23,12 +23,12 @@ jobs:
     permissions:
       contents: read
       packages: write
- 
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Use `docker/login-action` to log in to GHCR.io. 
+      # Use `docker/login-action` to log in to GHCR.io.
       # Once published, the packages are scoped to the account defined here.
       - name: Log in to the ghcr.io container registry
         uses: docker/login-action@v3.3.0
@@ -46,7 +46,7 @@ jobs:
         if:  ${{ inputs.publish && github.ref_name != 'main' }}
         run: echo "::warning::test-ubuntu-git images can only be published from the actions/checkout 'main' branch.  Workflow will continue with push/publish disabled."
 
-      # Use `docker/build-push-action` to build (and optionally publish) the image. 
+      # Use `docker/build-push-action` to build (and optionally publish) the image.
       - name: Build Docker Image (with optional Push)
         uses: docker/build-push-action@v6.5.0
         with:

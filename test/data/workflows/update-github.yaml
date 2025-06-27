@@ -11,15 +11,15 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
     - name: Update Octokit
-      working-directory: packages/github 
+      working-directory: packages/github
       run: |
         npx npm-check-updates -u --dep prod
         npm install
     - name: Check Status
       id: status
-      working-directory: packages/github 
-      run: | 
-        if [[ "$(git status --porcelain)" != "" ]]; then 
+      working-directory: packages/github
+      run: |
+        if [[ "$(git status --porcelain)" != "" ]]; then
         echo "::set-output name=createPR::true"
         git config --global user.email "github-actions@github.com"
         git config --global user.name "github-actions[bot]"

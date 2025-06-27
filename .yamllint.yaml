@@ -1,0 +1,14 @@
+---
+
+extends: default
+
+rules:
+  line-length:
+    max: 120
+    level: warning
+
+  truthy:
+    # needed since 'on:' converts to 'True:' due to Truthy convertion
+    # but is valid github workflow trigger keyword
+    ignore: |
+      .github/workflows/*

@@ -1,7 +1,7 @@
 name: 'Setup Ruby'
 description: 'Set up a specific version of Ruby and add the command-line tools to the PATH'
 author: 'GitHub'
-inputs: 
+inputs:
   ruby-version:
     description: 'Version range or exact version of a Ruby version to use.'
     default: '>= 2.4'

@@ -5,7 +5,7 @@ permissions:
 on:
   schedule:
     - cron: '0 0 * * 0' # Every Sunday at midnight
-  workflow_dispatch: 
+  workflow_dispatch:
 
 jobs:
   get_versions:
@@ -23,16 +23,16 @@ jobs:
 
         # Read major versions from versions.json
         MAJOR_VERSIONS=$(jq -r '.[]' versions.json)
-        
+
         # Initialize array to store latest versions
         LATEST_VERSIONS=()
-        
+
         # For each major version, find the latest release
         for VERSION in $MAJOR_VERSIONS; do
           # Get latest release for this major version
           LATEST=$(curl -s "https://nodejs.org/dist/index.json" | \
                   jq -r "[.[] | select(.version | startswith(\"$VERSION.\"))] | sort_by(.date) | reverse | .[0].version")
-          
+
           if [ -n "$LATEST" ]; then
             echo "Found latest $VERSION: $LATEST"
 
@@ -41,7 +41,7 @@ jobs:
             RELEASE_EXISTS=$(curl -s -H "Authorization: token ${{github.token}}" \
                            "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${LATEST}" | \
                            jq -r '.id != null')
-            
+
             if [ "$RELEASE_EXISTS" == "true" ]; then
               echo "Release for $LATEST already exists - skipping"
             else
@@ -53,28 +53,26 @@ jobs:
             echo "No version found for $VERSION"
           fi
         done
-        
+
         # Create properly escaped JSON for GitHub Actions
         MATRIX_JSON=$(jq -c -n --argjson versions "$(printf '%s\n' "${LATEST_VERSIONS[@]}" | jq -R . | jq -s .)" '{"node_version":$versions}')
         echo "Matrix JSON: $MATRIX_JSON"
-        
+
         # Setting output with proper delimiter for multiline values
         echo "versions<<EOF" >> $GITHUB_OUTPUT
         echo "$MATRIX_JSON" >> $GITHUB_OUTPUT
         echo "EOF" >> $GITHUB_OUTPUT
 
         echo "buildnode=$BUILD_NODE" >> $GITHUB_OUTPUT
-  
+
   build_release:
     name: Build and Release Node.js
     needs: get_versions
     if: needs.get_versions.outputs.buildnode == 1
-    strategy: 
+    strategy:
       matrix: ${{ fromJSON(needs.get_versions.outputs.versions) }}
     uses: ./.github/workflows/build-release-alpine-nodejs.yml
-    permissions: 
+    permissions:
       contents: write
     with:
       NodeVersion: ${{ matrix.node_version }}
-
-    

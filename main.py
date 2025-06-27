@@ -96,7 +96,7 @@ if __name__ == '__main__':
     argument_parser.add_argument("--validate-workflow", help="Path to the workflow yaml file to validate")
     argument_parser.add_argument("--validate-repo", help="Path to GitHub repository to validate actions and workflows")
     args = argument_parser.parse_args()
-    
+
     if args.validate_action:
         action_path = args.validate_action
         assert action_path.endswith((".yml", ".yaml"))

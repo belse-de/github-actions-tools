@@ -16,4 +16,3 @@ jobs:
       ghes_url: ${{ secrets.sanity_test_ghes_url }}
       actions_sync_releasedatetime: ${{ secrets.sanity_test_releasedatetime }}
       site_admin_token: ${{ secrets.sanity_test_site_admin_token }}
-

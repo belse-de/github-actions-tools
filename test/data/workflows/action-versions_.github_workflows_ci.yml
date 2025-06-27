@@ -29,7 +29,7 @@ jobs:
 
       - name: Test tarball
         run: ./script/test.sh ./_layout/action-versions.tar.gz
-      
+
       - name: Test zipball
         run: ./script/test.sh ./_layout/action-versions.zip
 

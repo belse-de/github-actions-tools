@@ -1,4 +1,4 @@
-# This workflow helps to analyze repository code for vulnerabilities, bugs, and other errors using CodeQL. 
+# This workflow helps to analyze repository code for vulnerabilities, bugs, and other errors using CodeQL.
 # For that CodeQL Action is used: https://github.com/github/codeql-action
 # Learn more about CodeQL at https://codeql.github.com/
 

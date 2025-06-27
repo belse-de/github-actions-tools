@@ -44,7 +44,7 @@ jobs:
         npm ci
         npm run tsc
       working-directory: packages/cache
-    
+
     - name: Generate files in working directory
       shell: bash
       run: packages/cache/__tests__/create-cache-files.sh ${{ runner.os }} test-cache

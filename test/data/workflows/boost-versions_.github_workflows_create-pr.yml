@@ -30,4 +30,4 @@ jobs:
                             -BranchName "update-versions-manifest-file" `
                             -CommitMessage "Update versions-manifest" `
                             -PullRequestTitle "[versions-manifest] Update for release from ${formattedDate}" `
-                            -PullRequestBody "Update versions-manifest.json for release from ${formattedDate}" 
+                            -PullRequestBody "Update versions-manifest.json for release from ${formattedDate}"

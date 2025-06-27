@@ -28,7 +28,7 @@ jobs:
   build_boost:
     name: Build Boost ${{ github.event.inputs.VERSION || '1.73.0' }} [${{ matrix.os }}]
     runs-on: ${{ matrix.os }}
-    env: 
+    env:
       ARTIFACT_NAME: boost-${{ github.event.inputs.VERSION || '1.73.0' }}-${{ matrix.platform }}-${{ matrix.toolset }}-${{ matrix.architecture }}
     strategy:
       fail-fast: false
@@ -73,7 +73,7 @@ jobs:
     name: Test Boost ${{ github.event.inputs.VERSION || '1.73.0' }} [${{ matrix.os }}]
     needs: build_boost
     runs-on: ${{ matrix.os }}
-    env: 
+    env:
       PLATFORM: ${{ matrix.platform }}
       ARTIFACT_NAME: boost-${{ github.event.inputs.VERSION || '1.73.0' }}-${{ matrix.platform }}-${{ matrix.toolset }}-${{ matrix.architecture }}
     strategy:
@@ -177,7 +177,7 @@ jobs:
               repo: context.repo.repo,
               release_id: ${{ steps.create_release.outputs.id }},
               name: artifactName,
-              data: fs.readFileSync(`./${artifactDir}/${artifactName}`) 
+              data: fs.readFileSync(`./${artifactDir}/${artifactName}`)
             });
           }
 

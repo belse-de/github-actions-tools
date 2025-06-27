@@ -32,7 +32,7 @@ inputs:
 # TODO: add input to control forcing to pull from cloud or dist.
 #       escape valve for someone having issues or needing the absolute latest which isn't cached yet
 outputs:
-  cache-hit: 
+  cache-hit:
     description: 'A boolean value to indicate if a cache was hit.'
   node-version:
     description: 'The installed node version.'
